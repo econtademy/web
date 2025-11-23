@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EdukaFeliz | Transforma tu Futuro</title>
+    
+    <!-- SEO Mejorado -->
+    <meta name="description" content="Plataforma líder en educación online y recursos para emprendedores. Cursos certificados, herramientas y consultoría.">
+    <meta name="keywords" content="cursos online, educación, certificados, aprendizaje">
+    <meta name="theme-color" content="#2563eb">
+    
+    <!-- PWA -->
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiRWR1a2FGZWxpeiIsInNob3J0X25hbWUiOiJFZHVrYUZlbGl6IiwidGhlbWVfY29sb3IiOiIjMjU2M2ViIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwZjE3MmEiLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsInN0YXJ0X3VybCI6Ii8ifQ==">
+    
+    <!-- Estilos y Fuentes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Configuración Tailwind Custom -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                fontFamily: { sans: ['Outfit', 'sans-serif'] },
+                extend: {
+                    colors: {
+                        brand: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 900: '#1e3a8a' },
+                        dark: '#0f172a'
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.6s ease-out forwards',
+                        'slide-up': 'slideUp 0.8s ease-out forwards',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        slideUp: { '0%': { opacity: '0', transform: 'translateY(30px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Estilos Críticos */
+        .slider-wrapper { position: relative; height: 85vh; min-height: 600px; overflow: hidden; background: #000; }
+        .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.5s ease-in-out; display: flex; align-items: center; justify-content: center; }
+        .slide.active { opacity: 1; z-index: 10; }
+        .slide-overlay { background: linear-gradient(to top, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.4)); position: absolute; inset: 0; z-index: 2; }
+        .slide-content { position: relative; z-index: 10; padding: 2rem; max-width: 1200px; width: 100%; }
+        
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); }
+        .iframe-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; background: #000; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .iframe-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        
+        /* Dark Mode */
+        .dark .glass-card { background: rgba(15, 23, 42, 0.95); color: white; }
+        .dark body { background: #0f172a; color: #e2e8f0; }
+        
+        /* Progress Bar */
+        .progress-bar { height: 8px; background: #e2e8f0; border-radius: 999px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #2563eb); transition: width 0.3s; }
+        
+        /* Star Rating */
+        .star-rating { display: flex; gap: 4px; }
+        .star { cursor: pointer; color: #cbd5e1; transition: color 0.2s; }
+        .star.filled { color: #fbbf24; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-dark text-slate-800 dark:text-slate-200 flex flex-col min-h-screen transition-colors duration-300">
+
+    <!-- ================= NAVBAR SUPERIOR ================= -->
+    <header class="fixed w-full z-50 transition-all duration-300 bg-white/90 dark:bg-dark/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <a href="#" onclick="app.router('home')" class="flex items-center gap-2 group">
+                    <div class="bg-brand-600 text-white p-2 rounded-xl shadow-lg group-hover:scale-105 transition transform duration-300">
+                        <i data-lucide="zap" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <span class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white leading-none">Eduka<span class="text-brand-600">Feliz</span></span>
+                        <span class="text-xs text-slate-400 block tracking-widest uppercase font-semibold">Academy PRO</span>
+                    </div>
+                </a>
+
+                <!-- Menú Principal Desktop -->
+                <nav class="hidden lg:flex items-center gap-8 font-medium text-slate-600 dark:text-slate-300">
+                    <a href="#" onclick="app.router('home')" class="hover:text-brand-600 transition py-2 border-b-2 border-transparent hover:border-brand-600">Inicio</a>
+                    <a href="#" onclick="app.router('store')" class="hover:text-brand-600 transition py-2 border-b-2 border-transparent hover:border-brand-600">Cursos & Tienda</a>
+                    <a href="#" onclick="app.router('services')" class="hover:text-brand-600 transition py-2 border-b-2 border-transparent hover:border-brand-600">Servicios</a>
+                    <a href="#" onclick="app.router('blog')" class="hover:text-brand-600 transition py-2 border-b-2 border-transparent hover:border-brand-600">Blog</a>
+                    <a href="#" onclick="app.router('contact')" class="hover:text-brand-600 transition py-2 border-b-2 border-transparent hover:border-brand-600">Contacto</a>
+                </nav>
+
+                <!-- Iconos y Botones -->
+                <div class="flex items-center gap-4">
+                    <!-- Dark Mode Toggle -->
+                    <button onclick="app.toggleDarkMode()" class="p-2.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition">
+                        <i data-lucide="moon" class="w-5 h-5 dark:hidden"></i>
+                        <i data-lucide="sun" class="w-5 h-5 hidden dark:block text-yellow-400"></i>
+                    </button>
+                    
+                    <!-- Carrito -->
+                    <button onclick="app.toggleCart()" class="relative p-2.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition group">
+                        <i data-lucide="shopping-bag" class="w-6 h-6 text-slate-700 dark:text-slate-300 group-hover:text-brand-600"></i>
+                        <span id="cart-badge" class="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full border-2 border-white dark:border-dark transform scale-0 transition-transform">0</span>
+                    </button>
+                    
+                    <button onclick="app.router('lms')" class="hidden md:flex bg-slate-900 dark:bg-brand-600 text-white px-6 py-2.5 rounded-full font-bold text-sm hover:bg-slate-800 dark:hover:bg-brand-700 transition shadow-lg items-center gap-2 hover:-translate-y-0.5 transform">
+                        <i data-lucide="user-circle" class="w-4 h-4"></i> Aula Virtual
+                    </button>
+
+                    <!-- Mobile Toggle -->
+                    <button class="lg:hidden text-slate-700 dark:text-slate-300 p-2" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                        <i data-lucide="menu" class="w-7 h-7"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Menú Móvil -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-white dark:bg-dark border-t border-slate-100 dark:border-slate-700 absolute w-full shadow-xl">
+            <div class="flex flex-col p-4 space-y-4 font-medium text-center">
+                <a href="#" onclick="app.router('home');document.getElementById('mobile-menu').classList.add('hidden')">Inicio</a>
+                <a href="#" onclick="app.router('store');document.getElementById('mobile-menu').classList.add('hidden')">Tienda</a>
+                <a href="#" onclick="app.router('services');document.getElementById('mobile-menu').classList.add('hidden')">Servicios</a>
+                <a href="#" onclick="app.router('lms');document.getElementById('mobile-menu').classList.add('hidden')" class="bg-brand-50 dark:bg-brand-900 text-brand-600 dark:text-brand-300 py-2 rounded-lg">Aula Virtual</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ================= CONTENEDOR PRINCIPAL (SPA) ================= -->
+    <main id="main-view" class="flex-grow pt-20">
+        <!-- VISTAS SE INYECTAN AQUÍ CON JS -->
+    </main>
+
+    <!-- ================= FOOTER PREMIUM ================= -->
+    <footer class="bg-dark text-slate-400 pt-20 pb-10 border-t border-slate-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-12 mb-16">
+            <div class="col-span-1 md:col-span-2">
+                <div class="flex items-center gap-2 text-white mb-6">
+                    <i data-lucide="zap" class="w-6 h-6 text-brand-500"></i>
+                    <span class="text-2xl font-bold">EdukaFeliz</span>
+                </div>
+                <p class="mb-6 max-w-sm leading-relaxed">Transformamos la educación digital. Aprende habilidades reales, obtén certificaciones y lleva tu carrera al siguiente nivel.</p>
+                
+                <!-- Newsletter -->
+                <form onsubmit="app.handlers.submitNewsletter(event)" class="flex gap-2 mb-6">
+                    <input type="email" id="newsletter-email" placeholder="Tu email" class="flex-1 px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-400 outline-none focus:border-brand-500" required>
+                    <button type="submit" class="bg-brand-600 text-white px-4 py-2 rounded-lg hover:bg-brand-700 transition">
+                        <i data-lucide="send" class="w-4 h-4"></i>
+                    </button>
+                </form>
+                
+                <div class="flex gap-4">
+                    <a href="#" class="bg-white/10 p-2 rounded-full hover:bg-brand-600 hover:text-white transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                    <a href="#" class="bg-white/10 p-2 rounded-full hover:bg-brand-600 hover:text-white transition"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                    <a href="#" class="bg-white/10 p-2 rounded-full hover:bg-brand-600 hover:text-white transition"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-6 text-lg">Explorar</h4>
+                <ul class="space-y-4">
+                    <li><a href="#" onclick="app.router('store')" class="hover:text-brand-500 transition">Todos los Cursos</a></li>
+                    <li><a href="#" onclick="app.router('services')" class="hover:text-brand-500 transition">Servicios Corporativos</a></li>
+                    <li><a href="#" onclick="app.router('blog')" class="hover:text-brand-500 transition">Blog & Recursos</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-6 text-lg">Legal</h4>
+                <ul class="space-y-4">
+                    <li><a href="#" class="hover:text-brand-500 transition">Términos y Condiciones</a></li>
+                    <li><a href="#" class="hover:text-brand-500 transition">Política de Privacidad</a></li>
+                    <li><a href="#" onclick="app.router('contact')" class="hover:text-brand-500 transition">Ayuda / Soporte</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 pt-8 border-t border-slate-800 text-center text-sm">
+            <p>&copy; 2024 EdukaFeliz PRO. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- ================= ELEMENTOS FLOTANTES ================= -->
+    
+    <!-- Modal Carrito -->
+    <div id="cart-sidebar" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="app.toggleCart()"></div>
+        <div class="absolute right-0 top-0 h-full w-full max-w-md bg-white dark:bg-slate-900 shadow-2xl transform transition-transform duration-300 flex flex-col">
+            <div class="p-6 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="shopping-bag" class="text-brand-600"></i>
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-white">Tu Carrito</h2>
+                </div>
+                <button onclick="app.toggleCart()" class="text-slate-400 hover:text-red-500 transition"><i data-lucide="x"></i></button>
+            </div>
+            
+            <!-- Cupón de Descuento -->
+            <div class="p-4 bg-brand-50 dark:bg-brand-900/20 border-b border-brand-100 dark:border-brand-800">
+                <form onsubmit="app.applyCoupon(event)" class="flex gap-2">
+                    <input type="text" id="coupon-input" placeholder="Código de cupón" class="flex-1 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-sm outline-none focus:border-brand-500">
+                    <button type="submit" class="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-brand-700 transition">Aplicar</button>
+                </form>
+                <p id="coupon-message" class="text-xs mt-2 hidden"></p>
+            </div>
+            
+            <div id="cart-content" class="flex-1 overflow-y-auto p-6 space-y-4">
+                <!-- Items Inyectados -->
+            </div>
+            
+            <div class="p-6 bg-slate-50 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
+                <div id="discount-display" class="hidden mb-2">
+                    <div class="flex justify-between text-sm text-green-600 dark:text-green-400">
+                        <span>Descuento (<span id="discount-name"></span>)</span>
+                        <span id="discount-amount">-$0.00</span>
+                    </div>
+                </div>
+                <div class="flex justify-between items-end mb-4">
+                    <span class="text-slate-500 font-medium">Total</span>
+                    <div class="text-right">
+                        <span id="cart-total" class="text-2xl font-bold text-slate-900 dark:text-white">$0.00</span>
+                        <p id="original-price" class="text-xs text-slate-400 line-through hidden">$0.00</p>
+                    </div>
+                </div>
+                <button onclick="app.openCheckout()" class="w-full bg-slate-900 dark:bg-brand-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-brand-600 dark:hover:bg-brand-700 transition shadow-lg flex justify-center items-center gap-2">
+                    Procesar Pago <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </button>
+                <p class="text-xs text-center text-slate-400 mt-3"><i data-lucide="shield-check" class="w-3 h-3 inline"></i> Pago 100% Seguro</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Checkout Mejorado -->
+    <div id="checkout-modal" class="fixed inset-0 z-[70] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-dark/80 backdrop-blur-sm" onclick="document.getElementById('checkout-modal').classList.add('hidden')"></div>
+        <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-2xl relative z-10 overflow-hidden shadow-2xl">
+            <div class="bg-gradient-to-r from-slate-900 to-slate-800 p-6 text-white text-center">
+                <h3 class="text-2xl font-bold">Finalizar Pedido</h3>
+                <p class="text-slate-300 text-sm mt-1">Completa tus datos para recibir acceso inmediato</p>
+            </div>
+            <div class="p-8">
+                <form onsubmit="app.submitOrder(event)" class="space-y-5">
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Nombre Completo *</label>
+                            <input type="text" id="chk-name" required class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Teléfono</label>
+                            <input type="tel" id="chk-phone" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none transition">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Correo Electrónico *</label>
+                        <input type="email" id="chk-email" placeholder="ejemplo@correo.com" required class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none transition">
+                        <p class="text-xs text-brand-600 mt-1">⚠️ Importante: Aquí enviaremos tus credenciales.</p>
+                    </div>
+                    
+                    <!-- Método de Pago -->
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3">Método de Pago</label>
+                        <div class="grid grid-cols-3 gap-3">
+                            <label class="flex items-center justify-center p-3 border-2 border-slate-200 dark:border-slate-700 rounded-lg cursor-pointer hover:border-brand-500 transition">
+                                <input type="radio" name="payment" value="card" checked class="mr-2">
+                                <i data-lucide="credit-card" class="w-5 h-5"></i>
+                            </label>
+                            <label class="flex items-center justify-center p-3 border-2 border-slate-200 dark:border-slate-700 rounded-lg cursor-pointer hover:border-brand-500 transition">
+                                <input type="radio" name="payment" value="paypal" class="mr-2">
+                                <span class="font-bold text-sm">PayPal</span>
+                            </label>
+                            <label class="flex items-center justify-center p-3 border-2 border-slate-200 dark:border-slate-700 rounded-lg cursor-pointer hover:border-brand-500 transition">
+                                <input type="radio" name="payment" value="transfer" class="mr-2">
+                                <i data-lucide="landmark" class="w-5 h-5"></i>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-brand-50 dark:bg-brand-900/20 p-4 rounded-lg">
+                        <div class="flex justify-between mb-2">
+                            <span class="font-medium">Total a pagar:</span>
+                            <span id="checkout-total" class="text-2xl font-bold text-brand-600">$0.00</span>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-brand-600 text-white py-3.5 rounded-xl font-bold hover:bg-brand-700 transition shadow-lg mt-2">
+                        Confirmar y Pagar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-8 right-8 bg-slate-800 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-4 transform translate-y-20 opacity-0 transition-all duration-500 z-[80]">
+        <div class="bg-green-500 rounded-full p-1"><i data-lucide="check" class="w-4 h-4 text-white"></i></div>
+        <div>
+            <h4 class="font-bold text-sm">Notificación</h4>
+            <p id="toast-msg" class="text-xs text-slate-300">Mensaje del sistema</p>
+        </div>
+    </div>
+
+    <!-- ================= CÓDIGO JS MAESTRO ================= -->
+    <script>
+        // CONFIGURACIÓN
+        const API_URL = "https://script.google.com/macros/s/AKfycbwDa7qjFsIsinFhbH_zGp-FXwTHc2wRLXkXmHB-wRylNZqqQT4JROcc2fHOft_4nTx1sg/exec"; 
+        const MOCK_MODE = false; // CAMBIAR A FALSE EN PRODUCCIÓN
+
+        const app = {
+            data: { products: [], blog: [], services: [] },
+            cart: JSON.parse(localStorage.getItem('ef_cart')) || [],
+            coupon: JSON.parse(localStorage.getItem('ef_coupon')) || null,
+            user: JSON.parse(localStorage.getItem('ef_user')) || null,
+            darkMode: localStorage.getItem('ef_darkMode') === 'true',
+
+            // --- INICIO ---
+            init: async () => {
+                lucide.createIcons();
+                app.applyDarkMode();
+                app.updateCartUI();
+                await app.fetchData();
+                app.router('home');
+                app.initSlider();
+            },
+
+            // --- DARK MODE ---
+            toggleDarkMode: () => {
+                app.darkMode = !app.darkMode;
+                localStorage.setItem('ef_darkMode', app.darkMode);
+                app.applyDarkMode();
+            },
+
+            applyDarkMode: () => {
+                if (app.darkMode) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            },
+
+            // --- DATA FETCHING ---
+            fetchData: async () => {
+                if (MOCK_MODE) {
+                    await new Promise(r => setTimeout(r, 600));
+                    app.data.products = [
+                        {id:'c-001', titulo:'Máster en Python', precio:49.99, categoria:'Curso', imagen:'https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=600', descripcion:'Aprende backend desde cero con Django y Flask. Incluye proyectos reales.', rating: 4.8, students: 1250},
+                        {id:'c-002', titulo:'Diseño UI/UX Pro', precio:39, categoria:'Curso', imagen:'https://images.unsplash.com/photo-1586717791821-3f44a5638d48?w=600', descripcion:'Domina Figma y los principios de diseño centrado en el usuario.', rating: 4.9, students: 890},
+                        {id:'h-001', titulo:'Kit Arduino Starter', precio:25.5, categoria:'Físico', imagen:'https://images.unsplash.com/photo-1555664424-778a6902201b?w=600', descripcion:'Placa, sensores, cables y todo lo necesario para empezar en robótica.', rating: 4.7, students: 450},
+                        {id:'c-003', titulo:'Inglés de Negocios', precio:29.99, categoria:'Curso', imagen:'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=600', descripcion:'Mejora tu fluidez para entrevistas y reuniones internacionales.', rating: 4.6, students: 670}
+                    ];
+                    app.data.blog = [
+                        {id:'b-001', titulo:'5 Trucos de Productividad', autor:'Ana García', fecha:'11/11/2024', imagen:'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600', contenido:'La técnica Pomodoro es fundamental para maximizar tu rendimiento...', tags:'Productividad'},
+                        {id:'b-002', titulo:'El futuro de la IA', autor:'Carlos Dev', fecha:'15/11/2024', imagen:'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600', contenido:'Las redes neuronales están cambiando el panorama tecnológico...', tags:'Tecnología'}
+                    ];
+                    app.data.services = [
+                        {id:'s-001', titulo:'Consultoría IT', descripcion:'Auditoría completa de tu infraestructura tecnológica.', precio:'Desde $500', icono:'server'},
+                        {id:'s-002', titulo:'Capacitación Equipos', descripcion:'Entrenamos a tu personal en nuevas tecnologías.', precio:'A cotizar', icono:'users'}
+                    ];
+                } else {
+                    try {
+                        const res = await fetch(API_URL);
+                        const json = await res.json();
+                        app.data = json;
+                    } catch(e) { app.showToast("Error de conexión"); }
+                }
+            },
+
+            // --- NAVEGACIÓN (VISTAS) ---
+            router: (view) => {
+                const main = document.getElementById('main-view');
+                window.scrollTo(0,0);
+                
+                // 1. HOME VIEW
+                if (view === 'home') {
+                    main.innerHTML = `
+                        <!-- HERO SLIDER -->
+                        <div class="slider-wrapper">
+                            <!-- Slide 1 -->
+                            <div class="slide active">
+                                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1920" class="absolute inset-0 w-full h-full object-cover">
+                                <div class="slide-overlay"></div>
+                                <div class="slide-content text-center text-white animate-slide-up">
+                                    <h3 class="text-brand-400 font-bold tracking-widest uppercase mb-4 text-sm md:text-base">Plataforma Educativa #1</h3>
+                                    <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">Impulsa tu Carrera <br>al <span class="text-brand-500">Siguiente Nivel</span></h1>
+                                    <p class="text-lg md:text-xl text-slate-300 mb-8 max-w-2xl mx-auto">Accede a cursos prácticos, mentoría experta y herramientas que realmente necesitas.</p>
+                                    <div class="flex flex-col md:flex-row gap-4 justify-center">
+                                        <button onclick="app.router('store')" class="bg-brand-600 text-white px-8 py-4 rounded-full font-bold hover:bg-brand-700 transition shadow-lg shadow-brand-600/30">Explorar Cursos</button>
+                                        <button onclick="app.router('contact')" class="bg-white/10 backdrop-blur border border-white/20 text-white px-8 py-4 rounded-full font-bold hover:bg-white hover:text-dark transition">Contáctanos</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Slide 2 -->
+                            <div class="slide">
+                                <div class="absolute inset-0 bg-brand-900"></div>
+                                <img src="https://images.unsplash.com/photo-1531297425935-9ae8ac68f432?auto=format&fit=crop&w=1920" class="absolute inset-0 w-full h-full object-cover opacity-50">
+                                <div class="slide-content text-left text-white max-w-4xl mx-auto pl-4 md:pl-0">
+                                    <h3 class="text-yellow-400 font-bold uppercase mb-4">Nueva Temporada</h3>
+                                    <h1 class="text-5xl md:text-7xl font-extrabold mb-6">Aprende Haciendo</h1>
+                                    <p class="text-xl mb-8">Proyectos reales. Código real. Resultados reales.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- BARRA DE CONFIANZA -->
+                        <div class="bg-white dark:bg-slate-800 border-b border-slate-100 dark:border-slate-700 py-10 relative z-20 -mt-2 rounded-t-3xl shadow-xl mx-2 md:mx-0">
+                            <div class="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                                <div><h4 class="text-3xl font-extrabold text-slate-900 dark:text-white">5k+</h4><p class="text-slate-500 dark:text-slate-400 text-sm">Estudiantes</p></div>
+                                <div><h4 class="text-3xl font-extrabold text-slate-900 dark:text-white">120+</h4><p class="text-slate-500 dark:text-slate-400 text-sm">Cursos</p></div>
+                                <div><h4 class="text-3xl font-extrabold text-slate-900 dark:text-white">4.9/5</h4><p class="text-slate-500 dark:text-slate-400 text-sm">Valoración</p></div>
+                                <div><h4 class="text-3xl font-extrabold text-slate-900 dark:text-white">24/7</h4><p class="text-slate-500 dark:text-slate-400 text-sm">Soporte</p></div>
+                            </div>
+                        </div>
+
+                        <!-- PRODUCTOS DESTACADOS -->
+                        <section class="py-20 bg-slate-50 dark:bg-dark">
+                            <div class="max-w-7xl mx-auto px-4">
+                                <div class="text-center mb-16">
+                                    <span class="text-brand-600 font-bold uppercase text-sm tracking-wider">Oportunidades</span>
+                                    <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mt-2">Cursos Más Vendidos</h2>
+                                    <div class="w-20 h-1.5 bg-brand-500 mx-auto mt-6 rounded-full"></div>
+                                </div>
+                                <div class="grid md:grid-cols-3 gap-8">
+                                    ${app.data.products.slice(0, 3).map(p => app.components.productCard(p)).join('')}
+                                </div>
+                                <div class="text-center mt-12">
+                                    <button onclick="app.router('store')" class="text-slate-600 dark:text-slate-300 font-bold hover:text-brand-600 flex items-center gap-2 mx-auto border-b-2 border-slate-200 dark:border-slate-700 pb-1 hover:border-brand-600 transition">Ver Catálogo Completo <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- POR QUÉ ELEGIRNOS -->
+                        <section class="py-20 bg-white dark:bg-slate-900">
+                            <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-2 gap-16 items-center">
+                                <div class="grid grid-cols-2 gap-6">
+                                    <div class="bg-brand-50 dark:bg-brand-900/20 p-6 rounded-2xl"><i data-lucide="award" class="w-10 h-10 text-brand-600 mb-4"></i><h4 class="font-bold">Certificado</h4><p class="text-sm text-slate-500 dark:text-slate-400">Validez internacional.</p></div>
+                                    <div class="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-2xl mt-8"><i data-lucide="video" class="w-10 h-10 text-indigo-600 mb-4"></i><h4 class="font-bold">HD Video</h4><p class="text-sm text-slate-500 dark:text-slate-400">Calidad cine.</p></div>
+                                    <div class="bg-emerald-50 dark:bg-emerald-900/20 p-6 rounded-2xl"><i data-lucide="infinity" class="w-10 h-10 text-emerald-600 mb-4"></i><h4 class="font-bold">Acceso Total</h4><p class="text-sm text-slate-500 dark:text-slate-400">De por vida.</p></div>
+                                    <div class="bg-orange-50 dark:bg-orange-900/20 p-6 rounded-2xl mt-8"><i data-lucide="users" class="w-10 h-10 text-orange-600 mb-4"></i><h4 class="font-bold">Comunidad</h4><p class="text-sm text-slate-500 dark:text-slate-400">Network activo.</p></div>
+                                </div>
+                                <div>
+                                    <h2 class="text-3xl md:text-4xl font-extrabold mb-6 text-slate-900 dark:text-white">Aprendizaje diseñado para humanos, no robots.</h2>
+                                    <p class="text-slate-500 dark:text-slate-400 text-lg mb-8 leading-relaxed">Olvídate de la teoría aburrida. En EdukaFeliz nos enfocamos en proyectos tangibles que puedes poner en tu portafolio hoy mismo.</p>
+                                    <ul class="space-y-4 mb-8">
+                                        <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-green-500"></i> Instructores con experiencia real.</li>
+                                        <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-green-500"></i> Actualizaciones gratuitas.</li>
+                                        <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-green-500"></i> Garantía de devolución.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- TESTIMONIOS -->
+                        <section class="py-20 bg-slate-50 dark:bg-dark">
+                            <div class="max-w-7xl mx-auto px-4">
+                                <div class="text-center mb-16">
+                                    <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white">Lo que dicen nuestros estudiantes</h2>
+                                </div>
+                                <div class="grid md:grid-cols-3 gap-8">
+                                    ${app.components.testimonialCard('María López', 'Desarrolladora Web', 'El curso de Python cambió mi carrera completamente. Ahora trabajo en una startup tech.', 5)}
+                                    ${app.components.testimonialCard('Juan Pérez', 'Diseñador UI/UX', 'Excelente contenido y soporte. Los proyectos son muy prácticos.', 5)}
+                                    ${app.components.testimonialCard('Sofia Ruiz', 'Emprendedora', 'Aprendí a automatizar mi negocio. Totalmente recomendado.', 4)}
+                                </div>
+                            </div>
+                        </section>
+                    `;
+                }
+
+                // 2. STORE VIEW (Mejorada con filtros)
+                else if (view === 'store') {
+                    main.innerHTML = `
+                        <div class="bg-slate-900 dark:bg-slate-950 py-16 text-center text-white">
+                            <h1 class="text-4xl font-bold">Tienda Oficial</h1>
+                            <p class="text-slate-400 mt-2">Invierte en herramientas y conocimiento.</p>
+                        </div>
+                        <div class="max-w-7xl mx-auto px-4 py-16">
+                            <!-- Búsqueda y Filtros -->
+                            <div class="mb-10">
+                                <div class="flex flex-col md:flex-row gap-4 mb-6">
+                                    <div class="flex-1 relative">
+                                        <input type="text" id="search-input" placeholder="Buscar cursos..." class="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-brand-500" onkeyup="app.filterProducts()">
+                                        <i data-lucide="search" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                                    </div>
+                                    <select id="category-filter" class="px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-brand-500" onchange="app.filterProducts()">
+                                        <option value="">Todas las categorías</option>
+                                        <option value="Curso">Cursos</option>
+                                        <option value="Físico">Productos Físicos</option>
+                                    </select>
+                                    <select id="sort-filter" class="px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-brand-500" onchange="app.filterProducts()">
+                                        <option value="default">Ordenar por</option>
+                                        <option value="price-asc">Precio: Menor a Mayor</option>
+                                        <option value="price-desc">Precio: Mayor a Menor</option>
+                                        <option value="rating">Mejor Valorados</option>
+                                    </select>
+                                </div>
+                                <div class="flex gap-2 overflow-x-auto pb-4">
+                                    <button onclick="app.setFilter('all')" class="filter-btn active px-6 py-2 bg-brand-600 text-white rounded-full font-bold whitespace-nowrap">Todos</button>
+                                    <button onclick="app.setFilter('Curso')" class="filter-btn px-6 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-full font-medium hover:border-brand-600 whitespace-nowrap">Cursos</button>
+                                    <button onclick="app.setFilter('Físico')" class="filter-btn px-6 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-full font-medium hover:border-brand-600 whitespace-nowrap">Herramientas</button>
+                                </div>
+                            </div>
+                            <div id="products-grid" class="grid md:grid-cols-3 lg:grid-cols-4 gap-8">
+                                ${app.data.products.map(p => app.components.productCard(p)).join('')}
+                            </div>
+                            <p id="no-results" class="text-center text-slate-400 py-12 hidden">No se encontraron productos.</p>
+                        </div>
+                    `;
+                }
+
+                // 3. SERVICES VIEW
+                else if (view === 'services') {
+                    main.innerHTML = `
+                        <div class="max-w-7xl mx-auto px-4 py-20">
+                            <div class="text-center mb-16">
+                                <h2 class="text-4xl font-bold text-slate-900 dark:text-white">Soluciones Corporativas</h2>
+                                <p class="text-xl text-slate-500 dark:text-slate-400 mt-4 max-w-2xl mx-auto">Llevamos la transformación digital a tu empresa.</p>
+                            </div>
+                            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                ${app.data.services.map(s => `
+                                    <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-xl transition group">
+                                        <div class="w-14 h-14 bg-brand-50 dark:bg-brand-900/20 rounded-xl flex items-center justify-center text-brand-600 mb-6 group-hover:bg-brand-600 group-hover:text-white transition">
+                                            <i data-lucide="${s.icono || 'star'}" class="w-7 h-7"></i>
+                                        </div>
+                                        <h3 class="text-2xl font-bold mb-3">${s.titulo}</h3>
+                                        <p class="text-slate-500 dark:text-slate-400 mb-6">${s.descripcion}</p>
+                                        <div class="mt-auto border-t border-slate-100 dark:border-slate-700 pt-6 flex justify-between items-center">
+                                            <span class="font-bold text-slate-900 dark:text-white">${s.precio}</span>
+                                            <button onclick="app.router('contact')" class="text-brand-600 font-bold text-sm">Cotizar →</button>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // 4. BLOG VIEW
+                else if (view === 'blog') {
+                    main.innerHTML = `
+                        <div class="max-w-5xl mx-auto px-4 py-16">
+                            <h2 class="text-4xl font-bold mb-10 border-l-4 border-brand-500 pl-4 dark:text-white">Blog & Novedades</h2>
+                            <div class="space-y-12">
+                                ${app.data.blog.map(post => `
+                                    <article class="flex flex-col md:flex-row gap-8 items-start bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-lg transition">
+                                        <img src="${post.imagen}" class="w-full md:w-64 h-48 object-cover rounded-xl shadow-md">
+                                        <div class="flex-1">
+                                            <div class="flex items-center gap-4 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
+                                                <span>${post.fecha}</span> • <span>${post.autor}</span>
+                                            </div>
+                                            <h3 class="text-2xl font-bold mb-3 text-slate-900 dark:text-white hover:text-brand-600 cursor-pointer transition">${post.titulo}</h3>
+                                            <p class="text-slate-600 dark:text-slate-400 leading-relaxed mb-4 line-clamp-3">${post.contenido}</p>
+                                            <div class="flex items-center justify-between">
+                                                <span class="inline-block bg-brand-50 dark:bg-brand-900/20 text-brand-600 text-xs font-bold px-3 py-1 rounded-full">${post.tags}</span>
+                                                <button class="text-brand-600 font-bold text-sm hover:underline">Leer Artículo Completo</button>
+                                            </div>
+                                        </div>
+                                    </article>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // 5. CONTACT VIEW
+                else if (view === 'contact') {
+                    main.innerHTML = `
+                        <div class="max-w-7xl mx-auto px-4 py-20">
+                            <div class="grid md:grid-cols-2 gap-16 bg-white dark:bg-slate-800 rounded-3xl shadow-2xl overflow-hidden">
+                                <div class="bg-slate-900 dark:bg-slate-950 p-12 text-white flex flex-col justify-between">
+                                    <div>
+                                        <h2 class="text-3xl font-bold mb-6">Hablemos de tu Proyecto</h2>
+                                        <p class="text-slate-400 mb-8">Estamos listos para responder tus dudas.</p>
+                                        <div class="space-y-6">
+                                            <div class="flex items-center gap-4"><div class="bg-white/10 p-3 rounded-full"><i data-lucide="map-pin"></i></div><p>Av. Innovación 123, Tech City</p></div>
+                                            <div class="flex items-center gap-4"><div class="bg-white/10 p-3 rounded-full"><i data-lucide="mail"></i></div><p>hola@edukafeliz.com</p></div>
+                                            <div class="flex items-center gap-4"><div class="bg-white/10 p-3 rounded-full"><i data-lucide="phone"></i></div><p>+1 234 567 890</p></div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-12 opacity-50"><i data-lucide="globe" class="w-48 h-48 absolute -bottom-10 -left-10 text-white/5"></i></div>
+                                </div>
+                                <div class="p-12">
+                                    <form onsubmit="app.handlers.submitContact(event)" class="space-y-6">
+                                        <div class="grid md:grid-cols-2 gap-6">
+                                            <div><label class="block font-bold text-sm mb-2 dark:text-white">Nombre</label><input type="text" id="c-name" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3 rounded-lg outline-none focus:border-brand-500" required></div>
+                                            <div><label class="block font-bold text-sm mb-2 dark:text-white">Email</label><input type="email" id="c-email" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3 rounded-lg outline-none focus:border-brand-500" required></div>
+                                        </div>
+                                        <div><label class="block font-bold text-sm mb-2 dark:text-white">Asunto</label><input type="text" id="c-subject" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3 rounded-lg outline-none focus:border-brand-500" required></div>
+                                        <div><label class="block font-bold text-sm mb-2 dark:text-white">Mensaje</label><textarea id="c-msg" rows="4" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3 rounded-lg outline-none focus:border-brand-500" required></textarea></div>
+                                        <button type="submit" class="w-full bg-brand-600 text-white py-4 rounded-xl font-bold shadow-lg hover:bg-brand-700 transition">Enviar Mensaje</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // 6. LMS VIEW (Aula Virtual Mejorada)
+                else if (view === 'lms') {
+                    if (!app.user) {
+                        main.innerHTML = `
+                            <div class="min-h-[80vh] flex items-center justify-center px-4 bg-slate-100 dark:bg-dark">
+                                <div class="bg-white dark:bg-slate-800 p-10 rounded-3xl shadow-2xl w-full max-w-md text-center">
+                                    <div class="w-20 h-20 bg-brand-50 dark:bg-brand-900/20 rounded-full flex items-center justify-center mx-auto mb-6 text-brand-600"><i data-lucide="lock" class="w-10 h-10"></i></div>
+                                    <h2 class="text-3xl font-bold mb-2 dark:text-white">Acceso Estudiantes</h2>
+                                    <p class="text-slate-500 dark:text-slate-400 mb-8">Ingresa tus credenciales de compra.</p>
+                                    <form onsubmit="app.handlers.login(event)" class="space-y-4 text-left">
+                                        <div><label class="font-bold text-xs uppercase text-slate-400">Email</label><input type="email" id="lms-email" class="w-full border-b-2 border-slate-200 dark:border-slate-700 dark:bg-slate-900 py-2 outline-none focus:border-brand-600 transition" required></div>
+                                        <div><label class="font-bold text-xs uppercase text-slate-400">ID Pedido (Contraseña)</label><input type="password" id="lms-pass" class="w-full border-b-2 border-slate-200 dark:border-slate-700 dark:bg-slate-900 py-2 outline-none focus:border-brand-600 transition" required></div>
+                                        <button type="submit" class="w-full bg-slate-900 dark:bg-brand-600 text-white py-4 rounded-xl font-bold mt-4 hover:bg-slate-800 dark:hover:bg-brand-700 transition">Ingresar al Aula</button>
+                                    </form>
+                                    <p class="text-xs text-slate-400 mt-4">¿Olvidaste tu ID? <a href="#" onclick="app.showToast('Contacta soporte@edukafeliz.com')" class="text-brand-600 hover:underline">Recuperar acceso</a></p>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        main.innerHTML = `
+                            <div class="bg-slate-900 dark:bg-slate-950 text-white py-8 px-4">
+                                <div class="max-w-7xl mx-auto flex justify-between items-center">
+                                    <div>
+                                        <h2 class="text-2xl font-bold">Hola, ${app.user.nombre}</h2>
+                                        <p class="text-slate-400">Bienvenido a tu espacio de aprendizaje.</p>
+                                    </div>
+                                    <button onclick="app.logout()" class="text-red-400 font-bold text-sm hover:text-red-300">Cerrar Sesión</button>
+                                </div>
+                            </div>
+                            <div class="max-w-7xl mx-auto px-4 py-12">
+                                <!-- Dashboard Stats -->
+                                <div class="grid md:grid-cols-4 gap-6 mb-12">
+                                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <span class="text-slate-500 dark:text-slate-400 text-sm">Cursos Activos</span>
+                                            <i data-lucide="book-open" class="w-5 h-5 text-brand-600"></i>
+                                        </div>
+                                        <p class="text-3xl font-bold dark:text-white">${app.user.cursos ? app.user.cursos.length : 0}</p>
+                                    </div>
+                                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <span class="text-slate-500 dark:text-slate-400 text-sm">Progreso Total</span>
+                                            <i data-lucide="trending-up" class="w-5 h-5 text-green-600"></i>
+                                        </div>
+                                        <p class="text-3xl font-bold dark:text-white">67%</p>
+                                    </div>
+                                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <span class="text-slate-500 dark:text-slate-400 text-sm">Certificados</span>
+                                            <i data-lucide="award" class="w-5 h-5 text-yellow-600"></i>
+                                        </div>
+                                        <p class="text-3xl font-bold dark:text-white">2</p>
+                                    </div>
+                                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <span class="text-slate-500 dark:text-slate-400 text-sm">Horas Totales</span>
+                                            <i data-lucide="clock" class="w-5 h-5 text-purple-600"></i>
+                                        </div>
+                                        <p class="text-3xl font-bold dark:text-white">48h</p>
+                                    </div>
+                                </div>
+
+                                <!-- Cursos -->
+                                <h3 class="text-2xl font-bold mb-6 dark:text-white">Mis Cursos</h3>
+                                <div class="space-y-8">
+                                    ${app.user.cursos && app.user.cursos.length ? app.user.cursos.map(c => `
+                                        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-100 dark:border-slate-700 overflow-hidden">
+                                            <div class="p-4 border-b bg-slate-50 dark:bg-slate-900 flex items-center justify-between">
+                                                <div class="flex items-center gap-3">
+                                                    <i data-lucide="play-circle" class="text-brand-600"></i>
+                                                    <h3 class="font-bold text-lg">${c.titulo}</h3>
+                                                </div>
+                                                <button onclick="app.downloadCertificate('${c.titulo}')" class="text-sm bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition flex items-center gap-2">
+                                                    <i data-lucide="download" class="w-4 h-4"></i> Certificado
+                                                </button>
+                                            </div>
+                                            <div class="grid lg:grid-cols-3">
+                                                <div class="lg:col-span-2 bg-black p-4">
+                                                    ${c.videoUrl ? `<div class="iframe-container"><iframe src="${c.videoUrl}" frameborder="0" allowfullscreen></iframe></div>` : '<div class="h-64 flex items-center justify-center text-slate-500">Video no disponible</div>'}
+                                                </div>
+                                                <div class="p-8">
+                                                    <h4 class="font-bold text-slate-900 dark:text-white mb-2">Progreso del Curso</h4>
+                                                    <div class="progress-bar mb-4">
+                                                        <div class="progress-fill" style="width: ${Math.floor(Math.random() * 100)}%"></div>
+                                                    </div>
+                                                    <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Has completado ${Math.floor(Math.random() * 15)} de 20 lecciones</p>
+                                                    
+                                                    <h4 class="font-bold text-slate-900 dark:text-white mb-4">Material del Curso</h4>
+                                                    <a href="${c.materialUrl || '#'}" target="_blank" class="flex items-center gap-3 p-4 border border-dashed border-slate-300 dark:border-slate-600 rounded-xl hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-brand-900/20 transition group mb-4">
+                                                        <div class="bg-slate-100 dark:bg-slate-700 p-2 rounded group-hover:bg-white dark:group-hover:bg-slate-600"><i data-lucide="download" class="text-slate-600 dark:text-slate-300 group-hover:text-brand-600"></i></div>
+                                                        <div><p class="font-bold text-sm">Descargar Archivos</p><p class="text-xs text-slate-400">PDFs, Ejercicios</p></div>
+                                                    </a>
+                                                    
+                                                    <h4 class="font-bold text-slate-900 dark:text-white mb-3">Califica este curso</h4>
+                                                    <div class="star-rating mb-4">
+                                                        ${[1,2,3,4,5].map(n => `<i data-lucide="star" class="star w-6 h-6" onclick="app.rateCourse('${c.titulo}', ${n})"></i>`).join('')}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `).join('') : '<div class="text-center py-20 bg-white dark:bg-slate-800 rounded-2xl"><i data-lucide="inbox" class="w-16 h-16 mx-auto mb-4 text-slate-300"></i><p class="text-xl text-slate-400">No tienes cursos activos.</p><button onclick="app.router(\'store\')" class="mt-4 bg-brand-600 text-white px-6 py-3 rounded-lg hover:bg-brand-700 transition">Explorar Cursos</button></div>'}
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+                
+                lucide.createIcons();
+            },
+
+            // --- COMPONENTES VISUALES ---
+            components: {
+                productCard: (p) => `
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden flex flex-col hover:shadow-2xl hover:-translate-y-2 transition duration-300 group">
+                        <div class="h-56 relative overflow-hidden">
+                            <img src="${p.imagen}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                            <span class="absolute top-3 left-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm">${p.categoria}</span>
+                            ${p.rating ? `<div class="absolute top-3 right-3 bg-yellow-400 text-white px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1"><i data-lucide="star" class="w-3 h-3"></i> ${p.rating}</div>` : ''}
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col">
+                            <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-2 leading-tight">${p.titulo}</h3>
+                            <p class="text-slate-500 dark:text-slate-400 text-sm mb-4 line-clamp-2 flex-1">${p.descripcion}</p>
+                            ${p.students ? `<p class="text-xs text-slate-400 mb-4"><i data-lucide="users" class="w-3 h-3 inline"></i> ${p.students} estudiantes</p>` : ''}
+                            <div class="flex items-center justify-between mt-auto">
+                                <span class="text-2xl font-extrabold text-slate-900 dark:text-white">${p.precio}</span>
+                                <button onclick="app.addToCart('${p.id}')" class="bg-brand-600 text-white w-10 h-10 rounded-xl flex items-center justify-center hover:bg-slate-900 dark:hover:bg-brand-700 transition shadow-lg shadow-brand-500/30">
+                                    <i data-lucide="plus" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                
+                testimonialCard: (name, role, text, rating) => `
+                    <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
+                        <div class="flex gap-1 mb-4">
+                            ${Array(rating).fill('<i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>').join('')}
+                        </div>
+                        <p class="text-slate-600 dark:text-slate-400 mb-6 italic">"${text}"</p>
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 bg-brand-100 dark:bg-brand-900/20 rounded-full flex items-center justify-center text-brand-600 font-bold">${name[0]}</div>
+                            <div>
+                                <h4 class="font-bold dark:text-white">${name}</h4>
+                                <p class="text-sm text-slate-500 dark:text-slate-400">${role}</p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+
+            // --- LÓGICA DE NEGOCIO ---
+            addToCart: (id) => {
+                const prod = app.data.products.find(p => p.id === id);
+                const exist = app.cart.find(i => i.id === id);
+                if (exist) {
+                    exist.qty++;
+                } else {
+                    app.cart.push({ ...prod, qty: 1 });
+                }
+                app.saveCart();
+                app.showToast(`✓ ${prod.titulo} agregado al carrito`);
+            },
+            
+            removeFromCart: (id) => {
+                app.cart = app.cart.filter(i => i.id !== id);
+                app.saveCart();
+            },
+
+            saveCart: () => {
+                localStorage.setItem('ef_cart', JSON.stringify(app.cart));
+                app.updateCartUI();
+            },
+
+            updateCartUI: () => {
+                const badge = document.getElementById('cart-badge');
+                const totalQty = app.cart.reduce((a, b) => a + b.qty, 0);
+                badge.innerText = totalQty;
+                badge.classList.toggle('scale-0', totalQty === 0);
+
+                const container = document.getElementById('cart-content');
+                if (container) {
+                    if (app.cart.length === 0) {
+                        container.innerHTML = '<div class="flex flex-col items-center justify-center h-full text-slate-400"><i data-lucide="shopping-cart" class="w-12 h-12 mb-2 opacity-20"></i><p>Tu carrito está vacío</p></div>';
+                        document.getElementById('cart-total').innerText = "$0.00";
+                    } else {
+                        container.innerHTML = app.cart.map(i => `
+                            <div class="flex gap-4 bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm">
+                                <img src="${i.imagen}" class="w-16 h-16 rounded-lg object-cover">
+                                <div class="flex-1">
+                                    <h4 class="font-bold text-sm text-slate-900 dark:text-white line-clamp-1">${i.titulo}</h4>
+                                    <div class="flex justify-between items-center mt-2">
+                                        <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">${i.precio} x ${i.qty}</span>
+                                        <button onclick="app.removeFromCart('${i.id}')" class="text-red-400 hover:text-red-600 bg-red-50 dark:bg-red-900/20 p-1 rounded"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('');
+                        
+                        let subtotal = app.cart.reduce((a, b) => a + (b.precio * b.qty), 0);
+                        let total = subtotal;
+                        
+                        if (app.coupon) {
+                            const discount = app.coupon.type === 'percent' 
+                                ? subtotal * (app.coupon.value / 100) 
+                                : app.coupon.value;
+                            total = subtotal - discount;
+                            
+                            document.getElementById('discount-display').classList.remove('hidden');
+                            document.getElementById('discount-name').innerText = app.coupon.code;
+                            document.getElementById('discount-amount').innerText = `-${discount.toFixed(2)}`;
+                            document.getElementById('original-price').innerText = `${subtotal.toFixed(2)}`;
+                            document.getElementById('original-price').classList.remove('hidden');
+                        } else {
+                            document.getElementById('discount-display').classList.add('hidden');
+                            document.getElementById('original-price').classList.add('hidden');
+                        }
+                        
+                        document.getElementById('cart-total').innerText = `${total.toFixed(2)}`;
+                    }
+                    lucide.createIcons();
+                }
+            },
+
+            // --- CUPONES ---
+            applyCoupon: (e) => {
+                e.preventDefault();
+                const code = document.getElementById('coupon-input').value.toUpperCase();
+                const msg = document.getElementById('coupon-message');
+                
+                const validCoupons = {
+                    'EDUKAFELIZ10': { type: 'percent', value: 10, code: 'EDUKAFELIZ10' },
+                    'PROMO20': { type: 'percent', value: 20, code: 'PROMO20' },
+                    'DESCUENTO5': { type: 'fixed', value: 5, code: 'DESCUENTO5' }
+                };
+                
+                if (validCoupons[code]) {
+                    app.coupon = validCoupons[code];
+                    localStorage.setItem('ef_coupon', JSON.stringify(app.coupon));
+                    msg.className = 'text-xs mt-2 text-green-600';
+                    msg.innerText = `✓ Cupón aplicado: ${app.coupon.type === 'percent' ? app.coupon.value + '%' : ' + app.coupon.value} de descuento`;
+                    msg.classList.remove('hidden');
+                    app.updateCartUI();
+                    document.getElementById('coupon-input').value = '';
+                } else {
+                    msg.className = 'text-xs mt-2 text-red-600';
+                    msg.innerText = '✗ Cupón inválido';
+                    msg.classList.remove('hidden');
+                }
+                
+                setTimeout(() => msg.classList.add('hidden'), 3000);
+            },
+
+            // --- FILTROS DE PRODUCTOS ---
+            filterProducts: () => {
+                const search = document.getElementById('search-input')?.value.toLowerCase() || '';
+                const category = document.getElementById('category-filter')?.value || '';
+                const sort = document.getElementById('sort-filter')?.value || 'default';
+                
+                let filtered = app.data.products.filter(p => {
+                    const matchSearch = p.titulo.toLowerCase().includes(search) || p.descripcion.toLowerCase().includes(search);
+                    const matchCategory = !category || p.categoria === category;
+                    return matchSearch && matchCategory;
+                });
+                
+                if (sort === 'price-asc') filtered.sort((a, b) => a.precio - b.precio);
+                else if (sort === 'price-desc') filtered.sort((a, b) => b.precio - a.precio);
+                else if (sort === 'rating') filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+                
+                const grid = document.getElementById('products-grid');
+                const noResults = document.getElementById('no-results');
+                
+                if (filtered.length === 0) {
+                    grid.innerHTML = '';
+                    noResults?.classList.remove('hidden');
+                } else {
+                    grid.innerHTML = filtered.map(p => app.components.productCard(p)).join('');
+                    noResults?.classList.add('hidden');
+                    lucide.createIcons();
+                }
+            },
+
+            setFilter: (category) => {
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active', 'bg-brand-600', 'text-white');
+                    btn.classList.add('bg-white', 'dark:bg-slate-800', 'border', 'border-slate-200', 'dark:border-slate-700', 'text-slate-600', 'dark:text-slate-300');
+                });
+                event.target.classList.add('active', 'bg-brand-600', 'text-white');
+                event.target.classList.remove('bg-white', 'dark:bg-slate-800', 'border', 'text-slate-600', 'dark:text-slate-300');
+                
+                const categoryFilter = document.getElementById('category-filter');
+                if (categoryFilter) {
+                    categoryFilter.value = category === 'all' ? '' : category;
+                    app.filterProducts();
+                }
+            },
+
+            // --- HANDLERS DE FORMULARIOS ---
+            handlers: {
+                submitOrder: async (e) => {
+                    e.preventDefault();
+                    if(app.cart.length === 0) return alert("Carrito vacío");
+                    
+                    const btn = e.target.querySelector('button');
+                    const oldText = btn.innerText;
+                    btn.innerText = "Procesando..."; 
+                    btn.disabled = true;
+
+                    const total = document.getElementById('cart-total').innerText;
+                    const payload = {
+                        action: 'checkout',
+                        nombre: document.getElementById('chk-name').value,
+                        email: document.getElementById('chk-email').value,
+                        telefono: document.getElementById('chk-phone').value,
+                        carrito: app.cart,
+                        total: total,
+                        cupon: app.coupon
+                    };
+
+                    await app.sendData(payload, (res) => {
+                        app.cart = []; 
+                        app.coupon = null;
+                        localStorage.removeItem('ef_coupon');
+                        app.saveCart();
+                        document.getElementById('checkout-modal').classList.add('hidden');
+                        alert(`¡PEDIDO EXITOSO! 🎉\n\nID Pedido: ${res.idPedido}\n\n✓ Guarda este ID, es tu contraseña para el Aula Virtual.\n✓ Revisa tu email: ${payload.email}\n\n¡Gracias por tu compra!`);
+                        app.router('lms');
+                    });
+                    
+                    btn.innerText = oldText; 
+                    btn.disabled = false;
+                },
+
+                login: async (e) => {
+                    e.preventDefault();
+                    const btn = e.target.querySelector('button');
+                    const oldText = btn.innerText;
+                    btn.innerText = "Verificando...";
+                    btn.disabled = true;
+                    
+                    if(MOCK_MODE) {
+                        setTimeout(() => {
+                            app.user = { 
+                                nombre: 'Estudiante Demo', 
+                                cursos: [
+                                    {titulo:'Máster en Python', videoUrl:'https://www.youtube.com/embed/lxRwEPvL-mQ', materialUrl:'https://drive.google.com'},
+                                    {titulo:'Diseño UI/UX Pro', videoUrl:'https://www.youtube.com/embed/c9Wg6Cb_YlU', materialUrl:'https://drive.google.com'}
+                                ]
+                            };
+                            localStorage.setItem('ef_user', JSON.stringify(app.user));
+                            app.router('lms');
+                        }, 1000); 
+                        return;
+                    }
+
+                    const payload = {
+                        action: 'login',
+                        email: document.getElementById('lms-email').value,
+                        password: document.getElementById('lms-pass').value
+                    };
+
+                    await app.sendData(payload, (res) => {
+                        if(res.status === 'success') { 
+                            app.user = res; 
+                            localStorage.setItem('ef_user', JSON.stringify(app.user));
+                            app.router('lms'); 
+                        }
+                        else { 
+                            alert("❌ Credenciales incorrectas"); 
+                            btn.innerText = oldText;
+                            btn.disabled = false;
+                        }
+                    });
+                },
+
+                submitContact: async (e) => {
+                    e.preventDefault();
+                    const payload = {
+                        action: 'contacto',
+                        nombre: document.getElementById('c-name').value,
+                        email: document.getElementById('c-email').value,
+                        asunto: document.getElementById('c-subject').value,
+                        mensaje: document.getElementById('c-msg').value
+                    };
+                    const btn = e.target.querySelector('button');
+                    const oldText = btn.innerText;
+                    btn.innerText = "Enviando...";
+                    btn.disabled = true;
+                    
+                    await app.sendData(payload, () => {
+                        app.showToast("✓ Mensaje enviado correctamente");
+                        e.target.reset();
+                        btn.innerText = oldText;
+                        btn.disabled = false;
+                    });
+                },
+
+                submitNewsletter: async (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById('newsletter-email').value;
+                    app.showToast(`✓ ¡Suscrito! Te enviaremos novedades a ${email}`);
+                    e.target.reset();
+                }
+            },
+
+            // --- FUNCIONES ADICIONALES ---
+            logout: () => {
+                app.user = null;
+                localStorage.removeItem('ef_user');
+                app.router('lms');
+                app.showToast('Sesión cerrada correctamente');
+            },
+
+            downloadCertificate: (courseName) => {
+                app.showToast(`📜 Descargando certificado de: ${courseName}`);
+                // Aquí podrías generar un PDF real o redirigir a un generador
+            },
+
+            rateCourse: (courseName, rating) => {
+                app.showToast(`⭐ Has calificado "${courseName}" con ${rating} estrellas`);
+                // Aquí enviarías la calificación al backend
+            },
+
+            // --- UTILS ---
+            toggleCart: () => {
+                const sidebar = document.getElementById('cart-sidebar');
+                sidebar.classList.toggle('hidden');
+                if (!sidebar.classList.contains('hidden')) {
+                    app.updateCartUI();
+                }
+            },
+
+            openCheckout: () => { 
+                if (app.cart.length === 0) {
+                    app.showToast('⚠️ Agrega productos al carrito primero');
+                    return;
+                }
+                app.toggleCart(); 
+                document.getElementById('checkout-modal').classList.remove('hidden');
+                const total = document.getElementById('cart-total').innerText;
+                document.getElementById('checkout-total').innerText = total;
+            },
+
+            showToast: (msg) => { 
+                const t = document.getElementById('toast'); 
+                document.getElementById('toast-msg').innerText = msg; 
+                t.classList.remove('opacity-0', 'translate-y-20'); 
+                setTimeout(()=>t.classList.add('opacity-0', 'translate-y-20'), 3000); 
+            },
+            
+            initSlider: () => {
+                let slideIndex = 0;
+                setInterval(() => {
+                    const slides = document.querySelectorAll('.slide');
+                    if(slides.length > 0) {
+                        slides.forEach(s => s.classList.remove('active'));
+                        slideIndex = (slideIndex + 1) % slides.length;
+                        slides[slideIndex].classList.add('active');
+                    }
+                }, 6000);
+            },
+
+            sendData: async (data, cb) => {
+                if(MOCK_MODE) {
+                    return setTimeout(() => cb({
+                        status:'success', 
+                        idPedido: 'DEMO-' + Math.floor(Math.random() * 100000)
+                    }), 1500);
+                }
+                try {
+                    const res = await fetch(API_URL, { 
+                        method: 'POST', 
+                        body: JSON.stringify(data), 
+                        headers: {"Content-Type": "text/plain;charset=utf-8"} 
+                    });
+                    const json = await res.json();
+                    cb(json);
+                } catch(e) { 
+                    console.error(e); 
+                    alert("Error de conexión con el servidor"); 
+                }
+            }
+        };
+
+        // INICIAR APP
+        document.addEventListener('DOMContentLoaded', app.init);
+    </script>
+</body>
+</html>
